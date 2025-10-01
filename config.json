@@ -1,0 +1,48 @@
+{
+  "developer": {
+    "name": "开发者名称",
+    "avatar": "👨‍💻",
+    "cardTitle": "喜欢这个工具吗？",
+    "cardDescription": "关注开发者获取更多实用插件"
+  },
+  "wechat": {
+    "id": "yolo_yam",
+    "qrCode": "https://qny.weizulin.cn/images/202507131855201.png",
+    "tip": "扫描上方二维码或搜索微信号添加",
+    "benefits": [
+      "🔥 最新实用插件推送",
+      "💬 技术交流和问题解答",
+      "🎆 新工具内测机会",
+      "💼 定制开发服务"
+    ]
+  },
+  "tools": [
+    {
+      "icon": "🎨",
+      "name": "颜色选择器",
+      "description": "一键获取网页中任意颜色值",
+      "status": "coming-soon",
+      "url": "",
+      "installText": "即将上线"
+    },
+    {
+      "icon": "📏",
+      "name": "屏幕测量工具",
+      "description": "精确测量网页元素尺寸和距离",
+      "status": "coming-soon",
+      "url": "",
+      "installText": "即将上线"
+    },
+    {
+      "icon": "📦",
+      "name": "小红书无水印下载工具",
+      "description": "一键下载小红书图片和视频，无水印保存",
+      "status": "published",
+      "url": "https://microsoftedge.microsoft.com/addons/detail/%E5%B0%8F%E7%BA%A2%E4%B9%A6%E6%97%A0%E6%B0%B4%E5%8D%B0%E4%B8%8B%E8%BD%BD%E5%B7%A5%E5%85%B7/elipfpfcbheoobinpgghdpilabcnfgpb",
+      "installText": "立即安装"
+    }
+  ],
+  "contact": {
+    "toolSuggestionText": "💬 有工具建议？ 添加微信告诉我们！"
+  }
+}

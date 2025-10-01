@@ -2,11 +2,55 @@ class IconGenerator {
     constructor() {
         this.sizes = [128, 48, 32, 16];
         this.generatedIcons = {};
+        this.config = null;
         this.init();
     }
 
-    init() {
+    async init() {
+        await this.loadConfig();
         this.bindEvents();
+    }
+
+    // 加载配置文件
+    async loadConfig() {
+        try {
+            const response = await fetch('./config.json');
+            this.config = await response.json();
+            console.log('配置加载成功:', this.config);
+        } catch (error) {
+            console.error('配置加载失败:', error);
+            // 使用默认配置
+            this.config = {
+                developer: {
+                    name: "开发者",
+                    avatar: "👨‍💻",
+                    cardTitle: "喜欢这个工具吗？",
+                    cardDescription: "关注开发者获取更多实用插件"
+                },
+                wechat: {
+                    id: "your_wechat_id",
+                    tip: "扫描上方二维码或搜索微信号添加",
+                    benefits: [
+                        "🔥 最新实用插件推送",
+                        "💬 技术交流和问题解答",
+                        "🎆 新工具内测机会",
+                        "💼 定制开发服务"
+                    ]
+                },
+                tools: [
+                    {
+                        icon: "🎨",
+                        name: "颜色选择器",
+                        description: "一键获取网页中任意颜色值",
+                        status: "coming-soon",
+                        installText: "即将上线"
+                    }
+                ],
+                contact: {
+                    toolSuggestionText: "💬 有工具建议？ 添加微信告诉我们！"
+                }
+            };
+        }
     }
 
     bindEvents() {
@@ -73,6 +117,12 @@ class IconGenerator {
                 copyCode();
             });
         }
+
+        // 开发者卡片功能
+        this.bindDeveloperCardEvents();
+
+        // 为初始状态的开发者卡片绑定事件
+        this.bindInitialDeveloperCardEvents();
     }
 
     async processImage(file) {
@@ -409,6 +459,415 @@ class IconGenerator {
         document.getElementById('fileInput').value = '';
         document.getElementById('previewSection').style.display = 'none';
         document.getElementById('progressSection').style.display = 'none';
+    }
+
+    // 开发者卡片事件绑定
+    bindDeveloperCardEvents() {
+        // 微信按钮
+        const wechatBtn = document.getElementById('wechatBtn');
+        if (wechatBtn) {
+            wechatBtn.addEventListener('click', () => {
+                this.showWeChatInfo();
+            });
+        }
+
+        // 更多工具按钮
+        const moreToolsBtn = document.getElementById('moreToolsBtn');
+        if (moreToolsBtn) {
+            moreToolsBtn.addEventListener('click', () => {
+                this.showMoreTools();
+            });
+        }
+    }
+
+    // 创建统一的弹窗基础结构
+    createModalBase(title, content, className) {
+        const modal = document.createElement('div');
+        modal.className = `modal ${className}`;
+        modal.innerHTML = `
+            <div class="modal-overlay">
+                <div class="modal-card">
+                    <div class="modal-header">
+                        <h3>${title}</h3>
+                        <button class="modal-close-btn">×</button>
+                    </div>
+                    <div class="modal-content">
+                        ${content}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return modal;
+    }
+
+    // 添加统一的弹窗样式
+    addModalStyles() {
+        if (document.getElementById('unified-modal-styles')) {
+            return; // 样式已存在
+        }
+
+        const style = document.createElement('style');
+        style.id = 'unified-modal-styles';
+        style.textContent = `
+            /* 统一弹窗基础样式 */
+            .modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 10000;
+                animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .modal-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(4px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .modal-card {
+                background: white;
+                border-radius: 16px;
+                width: 100%;
+                max-width: 400px;
+                max-height: 80vh;
+                overflow: hidden;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+                animation: modalSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 24px 24px 20px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+                background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%);
+            }
+
+            .modal-header h3 {
+                margin: 0;
+                font-size: 18px;
+                font-weight: 600;
+                color: #2c3e50;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .modal-close-btn {
+                background: none;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #6c757d;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                font-weight: 300;
+            }
+
+            .modal-close-btn:hover {
+                background: rgba(108, 117, 125, 0.1);
+                color: #495057;
+                transform: scale(1.1);
+            }
+
+            .modal-content {
+                padding: 24px;
+                overflow-y: auto;
+                flex: 1;
+            }
+
+            .modal-section {
+                margin-bottom: 24px;
+            }
+
+            .modal-section:last-child {
+                margin-bottom: 0;
+            }
+
+            .modal-info-card {
+                background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+                border: 1px solid rgba(255, 107, 107, 0.15);
+                border-radius: 12px;
+                padding: 20px;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .modal-list {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .modal-list-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 12px;
+                background: rgba(255, 107, 107, 0.04);
+                border: 1px solid rgba(255, 107, 107, 0.1);
+                border-radius: 8px;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .modal-list-item:hover {
+                background: rgba(255, 107, 107, 0.08);
+                border-color: rgba(255, 107, 107, 0.2);
+                transform: translateY(-1px);
+                box-shadow: 0 2px 8px rgba(255, 107, 107, 0.1);
+            }
+
+            .modal-item-icon {
+                font-size: 24px;
+                width: 40px;
+                text-align: center;
+                flex-shrink: 0;
+            }
+
+            .modal-item-info {
+                flex: 1;
+                text-align: left;
+            }
+
+            .modal-item-title {
+                margin: 0 0 4px;
+                font-size: 14px;
+                font-weight: 600;
+                color: #2c3e50;
+            }
+
+            .modal-item-desc {
+                margin: 0;
+                font-size: 12px;
+                color: #6c757d;
+                line-height: 1.4;
+            }
+
+            .modal-btn {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+                color: white;
+                border: none;
+                border-radius: 6px;
+                padding: 8px 16px;
+                font-size: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+            .modal-btn:hover {
+                background: linear-gradient(135deg, #ee5a52 0%, #dc4c64 100%);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            }
+
+            .modal-btn.secondary {
+                background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            }
+
+            .modal-btn.secondary:hover {
+                background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+                box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+            }
+
+            .modal-highlight {
+                background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 82, 0.05) 100%);
+                border: 1px solid rgba(255, 107, 107, 0.15);
+                border-radius: 8px;
+                padding: 16px;
+                text-align: center;
+            }
+
+            .modal-highlight p {
+                margin: 0;
+                font-size: 13px;
+                color: #495057;
+                font-weight: 500;
+            }
+
+            @keyframes modalFadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            @keyframes modalSlideUp {
+                from {
+                    transform: translateY(30px) scale(0.95);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0) scale(1);
+                    opacity: 1;
+                }
+            }
+
+            .wechat-modal .modal-card {
+                max-width: 360px;
+            }
+
+            .tools-modal .modal-card {
+                max-width: 420px;
+            }
+        `;
+
+        document.head.appendChild(style);
+    }
+
+    // 显示微信信息
+    showWeChatInfo() {
+        this.addModalStyles();
+
+        // 根据配置决定显示二维码还是手机图标
+        const qrCodeContent = this.config.wechat.qrCode ?
+            `<img src="${this.config.wechat.qrCode}" alt="微信二维码" style="width: 120px; height: 120px; border-radius: 8px; margin-bottom: 12px; border: 2px solid #f1f3f4;">` :
+            `<div style="font-size: 48px; margin-bottom: 12px;">📱</div>`;
+
+        const content = `
+            <div class="modal-section">
+                <div class="modal-info-card">
+                    ${qrCodeContent}
+                    <p style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #2c3e50;">
+                        微信号：<strong>${this.config.wechat.id}</strong>
+                    </p>
+                    <p style="margin: 0; font-size: 12px; color: #6c757d;">
+                        ${this.config.wechat.tip}
+                    </p>
+                </div>
+            </div>
+            <div class="modal-section">
+                <h4 style="margin: 0 0 12px; font-size: 16px; color: #2c3e50; display: flex; align-items: center; gap: 8px;">
+                    🎁 添加微信获得：
+                </h4>
+                <div class="modal-list">
+                    ${this.config.wechat.benefits.map(benefit => `
+                        <div style="padding: 8px 0; font-size: 13px; color: #495057;">
+                            ${benefit}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        const modal = this.createModalBase('💬 添加开发者微信', content, 'wechat-modal');
+        this.bindModalEvents(modal);
+        document.body.appendChild(modal);
+    }
+
+    // 显示更多工具 - 支持已发布状态
+    showMoreTools() {
+        this.addModalStyles();
+
+        const content = `
+            <div class="modal-section">
+                <div class="modal-list">
+                    ${this.config.tools.map((tool, index) => `
+                        <div class="modal-list-item">
+                            <div class="modal-item-icon">${tool.icon}</div>
+                            <div class="modal-item-info">
+                                <h4 class="modal-item-title">${tool.name}</h4>
+                                <p class="modal-item-desc">${tool.description}</p>
+                            </div>
+                            <button class="modal-btn ${tool.status === 'coming-soon' ? 'secondary' : ''}"
+                                    data-tool-index="${index}"
+                                    ${tool.status === 'coming-soon' ? 'disabled' : ''}>
+                                ${tool.installText}
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="modal-section">
+                <div class="modal-highlight">
+                    <p>${this.config.contact.toolSuggestionText}</p>
+                </div>
+            </div>
+        `;
+
+        const modal = this.createModalBase('🔧 更多实用工具', content, 'tools-modal');
+        this.bindModalEvents(modal);
+        this.bindToolButtonEvents(modal);
+        document.body.appendChild(modal);
+    }
+
+    // 绑定工具按钮事件
+    bindToolButtonEvents(modal) {
+        const toolButtons = modal.querySelectorAll('.modal-btn[data-tool-index]');
+        toolButtons.forEach(button => {
+            const toolIndex = parseInt(button.dataset.toolIndex);
+            const tool = this.config.tools[toolIndex];
+
+            if (tool.url && tool.status !== 'coming-soon') {
+                button.addEventListener('click', () => {
+                    window.open(tool.url, '_blank');
+                });
+                button.style.cursor = 'pointer';
+            }
+        });
+    }
+
+    // 绑定初始状态开发者卡片事件
+    bindInitialDeveloperCardEvents() {
+        // 初始状态的微信按钮
+        const initialWechatBtn = document.getElementById('initialWechatBtn');
+        if (initialWechatBtn) {
+            initialWechatBtn.addEventListener('click', () => {
+                this.showWeChatInfo();
+            });
+        }
+
+        // 初始状态的更多工具按钮
+        const initialMoreToolsBtn = document.getElementById('initialMoreToolsBtn');
+        if (initialMoreToolsBtn) {
+            initialMoreToolsBtn.addEventListener('click', () => {
+                this.showMoreTools();
+            });
+        }
+    }
+
+    // 绑定弹窗事件
+    bindModalEvents(modal) {
+        const overlay = modal.querySelector('.modal-overlay');
+        const closeBtn = modal.querySelector('.modal-close-btn');
+        const card = modal.querySelector('.modal-card');
+
+        const closeModal = () => {
+            if (document.body.contains(modal)) {
+                document.body.removeChild(modal);
+            }
+        };
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        closeBtn.addEventListener('click', closeModal);
     }
 }
 

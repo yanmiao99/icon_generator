@@ -5,16 +5,23 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Chrome插件图标生成</title>
+    <title>图标生成器演示</title>
     <link
       rel="stylesheet"
       href="popup.css" />
+    <style>
+      body {
+        width: 100%;
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+    </style>
   </head>
-
   <body>
     <div class="container">
       <div class="header">
-        <h1>Chrome插件图标尺寸生成器</h1>
+        <h1>图标尺寸生成器</h1>
         <p>上传图片，自动生成多种尺寸的图标</p>
       </div>
 
@@ -232,35 +239,20 @@
       </div>
     </div>
 
-    <!-- 初始状态的开发者信息卡片 -->
-    <div
-      class="developer-card"
-      id="initialDeveloperCard">
-      <div class="developer-header">
-        <div class="developer-avatar">
-          <div class="avatar-placeholder">👨‍💻</div>
-        </div>
-        <div class="developer-info">
-          <h4>喜欢这个工具吗？</h4>
-          <p>关注开发者获取更多实用插件</p>
-        </div>
-      </div>
-      <div class="developer-actions">
-        <button
-          class="action-btn wechat-btn"
-          id="initialWechatBtn">
-          <span class="btn-icon">💬</span>
-          <span class="btn-text">添加微信</span>
-        </button>
-        <button
-          class="action-btn tools-btn"
-          id="initialMoreToolsBtn">
-          <span class="btn-icon">🔧</span>
-          <span class="btn-text">更多工具</span>
-        </button>
-      </div>
-    </div>
-
     <script src="popup.js"></script>
+
+    <!-- 测试复制功能的调试代码 -->
+    <script>
+      // 显示预览区域以便测试复制功能
+      setTimeout(() => {
+        document.getElementById('previewSection').style.display = 'block';
+      }, 1000);
+
+      // 添加调试日志
+      window.addEventListener('load', () => {
+        console.log('页面已加载，复制函数状态:', typeof window.copyCode);
+        console.log('复制按钮:', document.querySelector('.copy-btn'));
+      });
+    </script>
   </body>
 </html>
