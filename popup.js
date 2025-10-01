@@ -120,9 +120,6 @@ class IconGenerator {
 
         // 开发者卡片功能
         this.bindDeveloperCardEvents();
-
-        // 为初始状态的开发者卡片绑定事件
-        this.bindInitialDeveloperCardEvents();
     }
 
     async processImage(file) {
@@ -824,25 +821,6 @@ class IconGenerator {
                 button.style.cursor = 'pointer';
             }
         });
-    }
-
-    // 绑定初始状态开发者卡片事件
-    bindInitialDeveloperCardEvents() {
-        // 初始状态的微信按钮
-        const initialWechatBtn = document.getElementById('initialWechatBtn');
-        if (initialWechatBtn) {
-            initialWechatBtn.addEventListener('click', () => {
-                this.showWeChatInfo();
-            });
-        }
-
-        // 初始状态的更多工具按钮
-        const initialMoreToolsBtn = document.getElementById('initialMoreToolsBtn');
-        if (initialMoreToolsBtn) {
-            initialMoreToolsBtn.addEventListener('click', () => {
-                this.showMoreTools();
-            });
-        }
     }
 
     // 绑定弹窗事件
