@@ -408,3 +408,42 @@ class IconGenerator {
 document.addEventListener('DOMContentLoaded', () => {
     new IconGenerator();
 });
+
+// 复制代码功能
+function copyCode() {
+    const codeText = `{
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}`;
+
+    navigator.clipboard.writeText(codeText).then(() => {
+        const copyBtn = document.querySelector('.copy-btn');
+        const originalText = copyBtn.innerHTML;
+
+        copyBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20,6 9,17 4,12"></polyline>
+            </svg>
+            已复制
+        `;
+        copyBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #229954 100%)';
+
+        setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+            copyBtn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
+        }, 2000);
+    }).catch(err => {
+        console.error('复制失败:', err);
+        // 降级方案：选择文本
+        const range = document.createRange();
+        const selection = window.getSelection();
+        const codeElement = document.querySelector('.manifest-code');
+        range.selectNodeContents(codeElement);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    });
+}

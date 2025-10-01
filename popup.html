@@ -10,10 +10,11 @@
       rel="stylesheet"
       href="popup.css" />
   </head>
+
   <body>
     <div class="container">
       <div class="header">
-        <h1>Chrome插件图标生成</h1>
+        <h1>图标尺寸生成器</h1>
         <p>上传图片，自动生成多种尺寸的图标</p>
       </div>
 
@@ -141,12 +142,64 @@
         </div>
 
         <div class="manifest-tip">
-          <h3>📝 使用提示</h3>
-          <p>将下边这段代码复制到您的 <code>manifest.json</code> 文件中。</p>
-          <p>再将图标文件夹放入您的项目之中。</p>
-          <div class="manifest-code">
-            "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48":
-            "icons/icon48.png", "128": "icons/icon128.png" },
+          <h3>使用提示</h3>
+          <p>将下面的配置代码复制到您的 <code>manifest.json</code> 文件中。</p>
+          <p>然后将生成的图标文件夹放入您的项目根目录。</p>
+          <div class="code-container">
+            <div class="code-header">
+              <div class="code-dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <span class="code-title">manifest.json</span>
+            </div>
+            <div class="manifest-code">
+              <span class="code-line">{</span>
+              <span class="code-line indent">"icons": {</span>
+              <span class="code-line indent-2"
+                >"16": "<span class="code-string">icons/icon16.png</span
+                >",</span
+              >
+              <span class="code-line indent-2"
+                >"32": "<span class="code-string">icons/icon32.png</span
+                >",</span
+              >
+              <span class="code-line indent-2"
+                >"48": "<span class="code-string">icons/icon48.png</span
+                >",</span
+              >
+              <span class="code-line indent-2"
+                >"128": "<span class="code-string">icons/icon128.png</span
+                >"</span
+              >
+              <span class="code-line indent">}</span>
+              <span class="code-line">}</span>
+            </div>
+            <div class="copy-btn-container">
+              <button
+                class="copy-btn"
+                onclick="copyCode()">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2">
+                  <rect
+                    x="9"
+                    y="9"
+                    width="13"
+                    height="13"
+                    rx="2"
+                    ry="2"></rect>
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                复制代码
+              </button>
+            </div>
           </div>
         </div>
       </div>
