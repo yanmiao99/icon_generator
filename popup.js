@@ -65,6 +65,14 @@ class IconGenerator {
                 this.downloadSingle(size);
             }
         });
+
+        // 复制代码按钮
+        const copyBtn = document.getElementById('copyBtn');
+        if (copyBtn) {
+            copyBtn.addEventListener('click', () => {
+                copyCode();
+            });
+        }
     }
 
     async processImage(file) {
@@ -409,8 +417,10 @@ document.addEventListener('DOMContentLoaded', () => {
     new IconGenerator();
 });
 
-// 复制代码功能
+// 复制代码功能 - 完全重写版本
 function copyCode() {
+    console.log('copyCode 函数被调用');
+
     const codeText = `{
   "icons": {
     "16": "icons/icon16.png",
@@ -420,30 +430,198 @@ function copyCode() {
   }
 }`;
 
-    navigator.clipboard.writeText(codeText).then(() => {
-        const copyBtn = document.querySelector('.copy-btn');
-        const originalText = copyBtn.innerHTML;
+    const copyBtn = document.querySelector('.copy-btn');
+    if (!copyBtn) {
+        console.error('复制按钮未找到');
+        alert('复制按钮未找到');
+        return;
+    }
 
-        copyBtn.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="20,6 9,17 4,12"></polyline>
-            </svg>
-            已复制
-        `;
-        copyBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #229954 100%)';
+    console.log('找到复制按钮，开始复制');
+    const originalText = copyBtn.innerHTML;
 
-        setTimeout(() => {
-            copyBtn.innerHTML = originalText;
-            copyBtn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
-        }, 2000);
-    }).catch(err => {
-        console.error('复制失败:', err);
-        // 降级方案：选择文本
-        const range = document.createRange();
-        const selection = window.getSelection();
-        const codeElement = document.querySelector('.manifest-code');
-        range.selectNodeContents(codeElement);
-        selection.removeAllRanges();
-        selection.addRange(range);
-    });
+    // 防止重复点击
+    if (copyBtn.disabled) {
+        console.log('按钮已禁用，防止重复点击');
+        return;
+    }
+
+    // 显示复制中状态
+    copyBtn.disabled = true;
+    copyBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        复制中...
+    `;
+
+    // 尝试复制
+    performCopy(codeText, copyBtn, originalText);
 }
+
+// 执行复制操作
+function performCopy(text, copyBtn, originalText) {
+    // 方法1: 现代 Clipboard API
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        console.log('尝试使用 Clipboard API');
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                console.log('Clipboard API 复制成功');
+                showCopySuccess(copyBtn, originalText);
+            })
+            .catch((err) => {
+                console.log('Clipboard API 失败:', err);
+                // 失败则尝试方法2
+                tryLegacyCopy(text, copyBtn, originalText);
+            });
+    } else {
+        console.log('Clipboard API 不可用，使用传统方法');
+        // 直接使用传统方法
+        tryLegacyCopy(text, copyBtn, originalText);
+    }
+}
+
+// 传统复制方法
+function tryLegacyCopy(text, copyBtn, originalText) {
+    console.log('尝试使用 execCommand');
+
+    let success = false;
+
+    try {
+        // 创建一个临时的 textarea 元素
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+
+        // 设置样式使其不可见但仍可交互
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        textArea.style.top = '-9999px';
+        textArea.style.width = '2em';
+        textArea.style.height = '2em';
+        textArea.style.padding = '0';
+        textArea.style.border = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.boxShadow = 'none';
+        textArea.style.background = 'transparent';
+        textArea.setAttribute('readonly', '');
+
+        document.body.appendChild(textArea);
+
+        // 选择文本
+        textArea.focus();
+        textArea.select();
+
+        // 兼容iOS
+        textArea.setSelectionRange(0, text.length);
+
+        // 尝试复制
+        success = document.execCommand('copy');
+
+        // 清理
+        document.body.removeChild(textArea);
+
+        if (success) {
+            console.log('execCommand 复制成功');
+            showCopySuccess(copyBtn, originalText);
+        } else {
+            console.log('execCommand 返回失败');
+            throw new Error('execCommand 返回 false');
+        }
+    } catch (err) {
+        console.error('execCommand 复制失败:', err);
+        // 最后的降级方案
+        showManualCopyHelp(copyBtn, originalText);
+    }
+}
+
+// 显示复制成功状态
+function showCopySuccess(copyBtn, originalText) {
+    console.log('显示复制成功状态');
+
+    copyBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20,6 9,17 4,12"></polyline>
+        </svg>
+        已复制
+    `;
+    copyBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #229954 100%)';
+
+    setTimeout(() => {
+        copyBtn.innerHTML = originalText;
+        copyBtn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
+        copyBtn.disabled = false;
+        console.log('复制按钮状态已恢复');
+    }, 2000);
+}
+
+// 显示手动复制帮助
+function showManualCopyHelp(copyBtn, originalText) {
+    console.log('显示手动复制帮助');
+
+    copyBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        请手动复制
+    `;
+    copyBtn.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+    copyBtn.disabled = false;
+
+    // 尝试选中代码文本便于手动复制
+    setTimeout(() => {
+        try {
+            const codeElement = document.querySelector('.manifest-code');
+            if (codeElement) {
+                const range = document.createRange();
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                range.selectNodeContents(codeElement);
+                selection.addRange(range);
+                console.log('代码文本已选中，用户可以手动复制');
+            }
+        } catch (e) {
+            console.error('选择文本失败:', e);
+        }
+    }, 100);
+
+    // 显示用户友好的提示
+    alert('自动复制失败，代码已为您选中，请按 Ctrl+C (或 Cmd+C) 手动复制');
+
+    setTimeout(() => {
+        copyBtn.innerHTML = originalText;
+        copyBtn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)';
+        console.log('按钮状态已恢复');
+    }, 3000);
+}
+
+// 确保函数在全局作用域中可用
+if (typeof window !== 'undefined') {
+    window.copyCode = copyCode;
+}
+
+// DOM 加载完成后也注册一次
+document.addEventListener('DOMContentLoaded', function() {
+    window.copyCode = copyCode;
+    console.log('DOM加载完成，复制函数已注册:', typeof window.copyCode);
+
+    // 为复制按钮绑定事件监听器
+    const copyBtn = document.getElementById('copyBtn') || document.querySelector('.copy-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', copyCode);
+        console.log('复制按钮事件已绑定');
+    } else {
+        console.log('未找到复制按钮');
+    }
+});
+
+// 确保页面加载后也能绑定事件
+window.addEventListener('load', function() {
+    // 为复制按钮绑定事件监听器（如果还没绑定的话）
+    const copyBtn = document.getElementById('copyBtn') || document.querySelector('.copy-btn');
+    if (copyBtn && !copyBtn.dataset.eventBound) {
+        copyBtn.addEventListener('click', copyCode);
+        copyBtn.dataset.eventBound = 'true';
+        console.log('页面加载完成，复制按钮事件已绑定');
+    }
+});

@@ -14,8 +14,8 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
     background: linear-gradient(135deg, #ffeef0 0%, #fff5f6 100%);
     color: #333;
-    width: 420px;
-    min-height: 500px;
+    width: 520px;
+    min-height: 200px;
     height: auto;
     overflow-x: hidden;
     overflow-y: auto;
@@ -47,16 +47,11 @@ body {
     color: white;
     position: relative;
     z-index: 1;
-    padding-top: 12px;
-    box-sizing: border-box;
 }
 
 .header h1 {
     font-size: 26px;
     font-weight: 700;
-    margin-bottom: 8px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    letter-spacing: 0.3px;
     color: white;
 }
 
@@ -64,13 +59,13 @@ body {
     font-size: 14px;
     opacity: 0.9;
     font-weight: 400;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    letter-spacing: 0.2px;
     color: rgba(255, 255, 255, 0.95);
+    line-height: 1.4;
 }
 
 .upload-section {
-    margin-bottom: var(--spacing-unit);
+    margin-bottom: var(--spacing-small);
+    margin-top: var(--spacing-large);
 }
 
 .upload-area {
@@ -201,7 +196,7 @@ body {
 .icon-item {
     background: white;
     border-radius: 12px;
-    padding: 16px;
+    padding: 16px 12px;
     text-align: center;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -216,10 +211,10 @@ body {
 }
 
 .icon-preview {
-    width: 64px;
-    height: 64px;
+    width: 60px;
+    height: 60px;
     margin: 0 auto 12px;
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
     background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
     display: flex;
@@ -251,7 +246,7 @@ body {
 .icon-size {
     font-weight: 600;
     color: #2c3e50;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 0.5px;
 }
 
@@ -260,7 +255,7 @@ body {
     color: white;
     border: none;
     padding: 6px 10px;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 11px;
     font-weight: 600;
@@ -268,7 +263,7 @@ body {
     position: absolute;
     top: 12px;
     right: 12px;
-    min-width: 36px;
+    min-width: 35px;
     box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
     letter-spacing: 0.3px;
     z-index: 10;

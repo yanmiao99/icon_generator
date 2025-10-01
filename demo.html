@@ -5,12 +5,19 @@
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0" />
-    <title>Chrome插件图标生成</title>
+    <title>图标生成器演示</title>
     <link
       rel="stylesheet"
       href="popup.css" />
+    <style>
+      body {
+        width: 100%;
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+    </style>
   </head>
-
   <body>
     <div class="container">
       <div class="header">
@@ -206,5 +213,19 @@
     </div>
 
     <script src="popup.js"></script>
+
+    <!-- 测试复制功能的调试代码 -->
+    <script>
+      // 显示预览区域以便测试复制功能
+      setTimeout(() => {
+        document.getElementById('previewSection').style.display = 'block';
+      }, 1000);
+
+      // 添加调试日志
+      window.addEventListener('load', () => {
+        console.log('页面已加载，复制函数状态:', typeof window.copyCode);
+        console.log('复制按钮:', document.querySelector('.copy-btn'));
+      });
+    </script>
   </body>
 </html>

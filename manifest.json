@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "图标尺寸生成器",
+  "name": "Chrome插件图标尺寸生成器",
   "version": "1.0",
   "description": "快速生成多种尺寸的图标文件，支持128x128、48x48、32x32、16x16尺寸",
   "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "图标尺寸生成器"
+    "default_title": "Chrome插件图标尺寸生成器"
   },
   "icons": {
     "16": "icons/icon16.png",
