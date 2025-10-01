@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>图标生成器 - 演示页面</title>
+    <link
+      rel="stylesheet"
+      href="popup.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        background: #f0f2f5;
+      }
+      .demo-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .demo-header {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+      .demo-content {
+        padding: 0;
+      }
+      .container {
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-container">
+      <div class="demo-header">
+        <h1>图标尺寸生成器</h1>
+        <p>浏览器插件演示页面</p>
+      </div>
+      <div class="demo-content">
+        <div class="container">
+          <div class="header">
+            <h1>图标尺寸生成器</h1>
+            <p>上传图片，自动生成多种尺寸的图标</p>
+          </div>
+
+          <div class="upload-section">
+            <div
+              class="upload-area"
+              id="uploadArea">
+              <div class="upload-content">
+                <svg
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7,10 12,15 17,10"></polyline>
+                  <line
+                    x1="12"
+                    y1="15"
+                    x2="12"
+                    y2="3"></line>
+                </svg>
+                <p>点击选择图片或拖拽到此处</p>
+                <p class="upload-tip">支持 PNG、JPG、JPEG 格式</p>
+              </div>
+              <input
+                type="file"
+                id="fileInput"
+                accept="image/*"
+                hidden />
+            </div>
+          </div>
+
+          <div
+            class="progress-section"
+            id="progressSection"
+            style="display: none">
+            <div class="progress-bar">
+              <div
+                class="progress-fill"
+                id="progressFill"></div>
+            </div>
+            <p id="progressText">处理中...</p>
+          </div>
+
+          <div
+            class="preview-section"
+            id="previewSection"
+            style="display: none">
+            <h2>生成的图标</h2>
+            <div class="icons-grid">
+              <div class="icon-item">
+                <button
+                  class="download-btn"
+                  data-size="128">
+                  下载
+                </button>
+                <div class="icon-preview">
+                  <img
+                    id="icon128"
+                    alt="128x128" />
+                </div>
+                <div class="icon-info">
+                  <span class="icon-size">128×128</span>
+                </div>
+              </div>
+              <div class="icon-item">
+                <button
+                  class="download-btn"
+                  data-size="48">
+                  下载
+                </button>
+                <div class="icon-preview">
+                  <img
+                    id="icon48"
+                    alt="48x48" />
+                </div>
+                <div class="icon-info">
+                  <span class="icon-size">48×48</span>
+                </div>
+              </div>
+              <div class="icon-item">
+                <button
+                  class="download-btn"
+                  data-size="32">
+                  下载
+                </button>
+                <div class="icon-preview">
+                  <img
+                    id="icon32"
+                    alt="32x32" />
+                </div>
+                <div class="icon-info">
+                  <span class="icon-size">32×32</span>
+                </div>
+              </div>
+              <div class="icon-item">
+                <button
+                  class="download-btn"
+                  data-size="16">
+                  下载
+                </button>
+                <div class="icon-preview">
+                  <img
+                    id="icon16"
+                    alt="16x16" />
+                </div>
+                <div class="icon-info">
+                  <span class="icon-size">16×16</span>
+                </div>
+              </div>
+            </div>
+            <div class="actions">
+              <button
+                id="downloadAllBtn"
+                class="download-all-btn">
+                下载全部图标
+              </button>
+              <button
+                id="resetBtn"
+                class="reset-btn">
+                重新选择图片
+              </button>
+            </div>
+
+            <div class="manifest-tip">
+              <h3>📝 使用提示</h3>
+              <p>
+                将下边这段代码复制到您的 <code>manifest.json</code> 文件中。
+              </p>
+              <p>再将图标文件夹放入您的项目之中。</p>
+              <div class="manifest-code">
+                "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png",
+                "48": "icons/icon48.png", "128": "icons/icon128.png" },
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
